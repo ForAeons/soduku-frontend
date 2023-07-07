@@ -1,36 +1,29 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { useSelector, useDispatch } from "react-redux";
+import store, { RootState } from "../store";
 import SingleCell from "./cell";
-import { BoardSlice, GameSlice } from "../slice";
-import { useDispatch } from "react-redux";
+import { BoardSlice } from "../store/slice";
+import { GeneratePuzzle, GetSolution } from "../store/thunk/boardThunk";
 
 const Board: React.FC = () => {
   const sodukuBoard = useSelector((state: RootState) => state.board);
-  const game = useSelector((state: RootState) => state.game);
   const dispatch = useDispatch();
-
-  const nextBoardSize = game.boardSize === 9 ? 16 : 9;
-
-  const gridClassName = (size: number): string =>
-    `grid grid-cols-${size} grid-rows-${size} gap-2`;
 
   const handleReset = () => {
     dispatch(BoardSlice.actions.reset());
   };
 
-  const handleNewGame = () => {
-    dispatch(
-      BoardSlice.actions.newGame({
-        size: nextBoardSize,
-      })
-    );
-    dispatch(GameSlice.actions.setBoardSize(nextBoardSize));
+  const handleGeneratePuzzle = () => {
+    store.dispatch(GeneratePuzzle("expert"));
+  };
+
+  const handleAutoSolve = () => {
+    store.dispatch(GetSolution(sodukuBoard));
   };
 
   return (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex-col w-max h-auto">
-      <div className={gridClassName(game.boardSize)}>
+      <div className="grid grid-cols-9 grid-rows-9 gap-2">
         {sodukuBoard.cells.flatMap((row, rowIndex) => {
           return row.map((cell, colIndex) => {
             return (
@@ -46,18 +39,21 @@ const Board: React.FC = () => {
       </div>
       <div className="flex flex-row justify-between mt-3 ">
         <button
+          className=" bg-purple-400 rounded-md py-1 px-2 hover:bg-purple-300 shadow-md"
+          onClick={handleGeneratePuzzle}
+        >
+          Generate Puzzle
+        </button>
+        <button
           className=" bg-yellow-400 rounded-md py-1 px-2 hover:bg-yellow-300 shadow-md"
           onClick={handleReset}
         >
           Reset Board
         </button>
         <button
-          className="bg-purple-400 rounded-md py-1 px-2 hover:bg-purple-300 shadow-md"
-          onClick={handleNewGame}
+          className="bg-teal-400 rounded-md py-1 px-2 hover:bg-teal-300 shadow-md"
+          onClick={handleAutoSolve}
         >
-          {`New ${nextBoardSize} x ${nextBoardSize} Game`}
-        </button>
-        <button className="bg-teal-400 rounded-md py-1 px-2 hover:bg-teal-300 shadow-md">
           Solve4Me
         </button>
       </div>

@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { newGame, UpdateCell, ResetBoard } from "../util/boardUtil";
+import {
+  newGame,
+  UpdateCell,
+  ResetBoard,
+  UpdateBoard,
+} from "../../util/boardUtil";
+import { GeneratePuzzle, GetSolution } from "../thunk/boardThunk";
 
 // Payload type for the modifyCell action
 type modifyCellPayload = {
@@ -30,6 +36,15 @@ export const BoardSlice = createSlice({
     newGame: (_, action: PayloadAction<resetPayload>) => {
       return newGame(action.payload.size);
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(GeneratePuzzle.fulfilled, (state, action) => {
+        UpdateBoard(state, action.payload);
+      })
+      .addCase(GetSolution.fulfilled, (state, action) => {
+        UpdateBoard(state, action.payload);
+      });
   },
 });
 

@@ -1,5 +1,5 @@
 import { Cell, CellState } from "../types/index.ts";
-import BoardSlice from "../slice/boardSlice.ts";
+import BoardSlice from "../store/slice/boardSlice.ts";
 import { useDispatch } from "react-redux";
 
 const CellStateToClassName = (state: CellState): string => {

@@ -25,6 +25,26 @@ export const newGame = (size: number): Board => {
   };
 };
 
+export const UpdateBoard = (board: Board, newBoard: number[][]): void => {
+  if (newBoard.length !== board.size) {
+    throw new Error("New board must be the same size as the old board");
+  }
+
+  // Update the board
+  for (let i = 0; i < newBoard.length; i++) {
+    for (let j = 0; j < newBoard[i].length; j++) {
+      board.cells[i][j].value = newBoard[i][j].toString();
+    }
+  }
+
+  for (let i = 0; i < board.size; i++) {
+    updateRow(board, i); // Update the row first
+    updateColumn(board, i); // Update the column next
+    updateBox(board, i); // Update the box last
+  }
+  updateCellStates(board); // Reset the modified state of the cell
+};
+
 /**
  * Update a specific cell in the board and update the state of the board (row, column, and box)
  * @param row the row of the cell

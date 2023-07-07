@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Game } from "../types";
+import { Game } from "../../types";
 
 const initialState: Game = {
   boardSize: 9,
